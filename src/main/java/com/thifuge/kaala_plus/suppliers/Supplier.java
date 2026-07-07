@@ -1,4 +1,4 @@
-package com.thifuge.kaala_plus.clients;
+package com.thifuge.kaala_plus.suppliers;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
