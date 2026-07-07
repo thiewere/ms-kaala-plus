@@ -1,4 +1,4 @@
-package com.thifuge.kaala_plus.orders;
+package com.thifuge.kaala_plus.clients;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,25 +14,25 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "orders")
-public class Order {
+@Table(name = "suppliers")
+public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", nullable = false)
+    @Column(name = "supplier_id", nullable = false)
     private Integer id;
 
-    @Column(name = "reference", nullable = false, length = 40)
-    private String reference;
+    @Column(name = "name", nullable = false, length = 45)
+    private String name;
+
+    @Column(name = "phone", nullable = false, length = 25)
+    private String phone;
+
+    @Column(name = "address", length = 50)
+    private String address;
 
     @ColumnDefault("now()")
     @Column(name = "created_at")
     private LocalDate createdAt;
-
-    @Column(name = "completed_at")
-    private LocalDate completedAt;
-
-    @Column(name = "order_state", length = 15)
-    private String orderState;
 
     @ColumnDefault("now()")
     @Column(name = "updated_at")
