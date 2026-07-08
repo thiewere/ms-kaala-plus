@@ -1,5 +1,6 @@
 package com.thifuge.kaala_plus.orders;
 
+import com.thifuge.kaala_plus.clients.Client;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,10 @@ public class Order {
 
     @Column(name = "reference", nullable = false, length = 40)
     private String reference;
+
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    @JoinColumn(name = "client_id")
+    private Client client;
 
     @ColumnDefault("now()")
     @Column(name = "created_at")
