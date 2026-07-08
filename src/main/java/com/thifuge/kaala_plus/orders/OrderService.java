@@ -22,10 +22,12 @@ public class OrderService {
         Client client = order.getClient();
 
         /* check if the client exist in the db, if not, register it before saving the order */
-        Client clientInDB = this.clientService.findClientById(client.getId());
+        Client clientInDB = this.clientService.findClientByPhone(client.getPhone());
         if (clientInDB == null) {
             log.info("Creating new client");
             this.clientService.createClient(client);
+        } else {
+            order.setClient(clientInDB);
         }
         log.info("Creating new order");
         this.orderRepository.save(order);
