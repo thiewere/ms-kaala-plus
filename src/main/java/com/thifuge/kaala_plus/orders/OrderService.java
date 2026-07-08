@@ -24,8 +24,10 @@ public class OrderService {
         /* check if the client exist in the db, if not, register it before saving the order */
         Client clientInDB = this.clientService.findClientById(client.getId());
         if (clientInDB == null) {
+            log.info("Creating new client");
             this.clientService.createClient(client);
         }
+        log.info("Creating new order");
         this.orderRepository.save(order);
     }
 
