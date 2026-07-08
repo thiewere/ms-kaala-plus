@@ -49,7 +49,9 @@ public class OrderService {
     public Order findOrderByReference(String reference) {
         log.info("Finding Order with reference {}", reference);
         Optional<Order> order = this.orderRepository.findByReference(reference);
-        return order.orElse(null);
+        return order.orElseThrow(()  -> new EntityNotFoundException(
+                "Order with reference " + reference + " not found"
+        ));
     }
 
     public Order updateOrder(Integer id, Order order) {
