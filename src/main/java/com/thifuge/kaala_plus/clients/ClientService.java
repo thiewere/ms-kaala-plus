@@ -33,6 +33,12 @@ public class ClientService {
         ));
     }
 
+    public Client findClientByPhone(String phone) {
+        log.info("Finding client by phone: {}", phone);
+        Optional<Client> client = this.clientRepository.findClientByPhone(phone);
+        return client.orElse(null);
+    }
+
     public Client updateClient(int id, Client client) {
         log.info("Updating client by id: {}", client);
         Client clientInDb = this.findClientById(id);
