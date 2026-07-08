@@ -46,6 +46,12 @@ public class OrderService {
         ));
     }
 
+    public Order findOrderByReference(String reference) {
+        log.info("Finding Order with reference {}", reference);
+        Optional<Order> order = this.orderRepository.findByReference(reference);
+        return order.orElse(null);
+    }
+
     public Order updateOrder(Integer id, Order order) {
         log.info("Updating Order with id {}", order.getId());
         Order orderInDB = this.findOrder(id);
