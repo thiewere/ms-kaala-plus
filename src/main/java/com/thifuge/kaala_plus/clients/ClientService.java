@@ -1,10 +1,12 @@
 package com.thifuge.kaala_plus.clients;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
@@ -25,7 +27,10 @@ public class ClientService {
 
     public Client findClientById(int id) {
         log.info("Finding client by id: {}", id);
-        return clientRepository.findById(id).get();
+        Optional<Client> optionalClient = this.clientRepository.findById(id);
+        return optionalClient.orElseThrow(() -> new EntityNotFoundException(
+                "Client with id: " + id + " not found"
+        ));
     }
 
     public Client updateClient(int id, Client client) {
