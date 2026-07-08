@@ -42,9 +42,9 @@ public class OrderService {
         ));
     }
 
-    public Order updateOrder(Order order) {
+    public Order updateOrder(Integer id, Order order) {
         log.info("Updating Order with id {}", order.getId());
-        Order orderInDB = this.findOrder(order.getId());
+        Order orderInDB = this.findOrder(id);
 
         orderInDB.setReference(order.getReference());
         orderInDB.setClient(order.getClient());
