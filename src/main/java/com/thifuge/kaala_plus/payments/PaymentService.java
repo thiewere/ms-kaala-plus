@@ -1,5 +1,7 @@
 package com.thifuge.kaala_plus.payments;
 
+import com.thifuge.kaala_plus.shared.entities.Currency;
+import com.thifuge.kaala_plus.shared.services.CurrencyService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +16,15 @@ import java.util.Optional;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final CurrencyService currencyService;
 
     public void createPayment(Payment payment) {
+        Currency currency = payment.getCurrency();
+        Currency currencyInDB = this.currencyService.getCurrencyByName(currency.getName());
+        if (currencyInDB == null) {
+            currencyInDB = this.currencyService.createCurrency(currency);
+        }
+        payment.setCurrency(currencyInDB);
         log.info("Creating a new payment {}", payment);
         this.paymentRepository.save(payment);
     }
