@@ -21,6 +21,7 @@ public class ExpenseService {
     public void createExpense(Expense expense) {
         Order order = expense.getOrder();
         Order orderInDB = this.orderService.findOrderByReference(order.getReference());
+        log.info("Creating new expense " + expense);
         expense.setOrder(orderInDB);
         this.expenseRepository.save(expense);
     }
