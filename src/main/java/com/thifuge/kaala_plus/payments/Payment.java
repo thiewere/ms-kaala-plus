@@ -1,6 +1,7 @@
 package com.thifuge.kaala_plus.payments;
 
 import com.thifuge.kaala_plus.orders.Order;
+import com.thifuge.kaala_plus.shared.entities.Currency;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,10 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
