@@ -1,6 +1,8 @@
 package com.thifuge.kaala_plus.orders;
 
 import com.thifuge.kaala_plus.clients.Client;
+import com.thifuge.kaala_plus.containers.Container;
+import com.thifuge.kaala_plus.shared.entities.Currency;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,6 +44,14 @@ public class Order {
     @ColumnDefault("now()")
     @Column(name = "updated_at")
     private LocalDate updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    @JoinColumn(name = "container_id")
+    private Container container;
 
 
 }
