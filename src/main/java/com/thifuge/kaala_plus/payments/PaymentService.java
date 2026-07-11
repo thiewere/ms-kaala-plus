@@ -55,7 +55,12 @@ public class PaymentService {
         Payment paymentInDB = this.findPayment(id);
 
         log.info("Updating a payment with id {}", id);
-        paymentInDB.setCurrency(payment.getCurrency());
+        Currency currency = payment.getCurrency();
+        Currency currencyInDB = this.currencyService.getCurrencyByName(currency.getName());
+        if (currencyInDB == null) {
+            currencyInDB = this.currencyService.createCurrency(currency);
+        }
+        paymentInDB.setCurrency(currencyInDB);
         paymentInDB.setAmount(payment.getAmount());
         paymentInDB.setPaymentDate(payment.getPaymentDate());
         paymentInDB.setPaymentType(payment.getPaymentType());
