@@ -1,5 +1,7 @@
 package com.thifuge.kaala_plus.payments;
 
+import com.thifuge.kaala_plus.orders.Order;
+import com.thifuge.kaala_plus.orders.OrderService;
 import com.thifuge.kaala_plus.shared.entities.Currency;
 import com.thifuge.kaala_plus.shared.services.CurrencyService;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,8 +19,15 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final CurrencyService currencyService;
+    private final OrderService orderService;
 
     public void createPayment(Payment payment) {
+        // find the target order
+        Order order = payment.getOrder();
+        Order orderInDB = this.orderService.findOrderByReference(order.getReference());
+        payment.setOrder(orderInDB);
+
+        // find the target currency or create a new one
         Currency currency = payment.getCurrency();
         Currency currencyInDB = this.currencyService.getCurrencyByName(currency.getName());
         if (currencyInDB == null) {
