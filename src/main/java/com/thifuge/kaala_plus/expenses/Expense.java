@@ -1,6 +1,7 @@
 package com.thifuge.kaala_plus.expenses;
 
 import com.thifuge.kaala_plus.orders.Order;
+import com.thifuge.kaala_plus.shared.entities.Currency;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,10 @@ public class Expense {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 
     @Column(name = "description", length = 100)
     private String description;
