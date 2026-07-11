@@ -54,7 +54,16 @@ public class ExpenseService {
 
         log.info("Updating expense with id " + id + " from " + expenseInDB);
         expenseInDB.setExpenseType(expense.getExpenseType());
-        expenseInDB.setOrder(expense.getOrder());
+
+        //TODO: resolve the update issues when id is not provided
+        //expenseInDB.setOrder(expense.getOrder());
+
+        Currency currency = expense.getCurrency();
+        Currency currencyInDB = this.currencyService.getCurrencyByName(currency.getName());
+        if (currencyInDB == null) {
+            currencyInDB = this.currencyService.createCurrency(currency);
+        }
+        expenseInDB.setCurrency(currencyInDB);
         expenseInDB.setDescription(expense.getDescription());
         expenseInDB.setExpenseDate(expense.getExpenseDate());
         expenseInDB.setAmount(expense.getAmount());
