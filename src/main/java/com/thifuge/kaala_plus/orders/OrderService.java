@@ -2,6 +2,8 @@ package com.thifuge.kaala_plus.orders;
 
 import com.thifuge.kaala_plus.clients.Client;
 import com.thifuge.kaala_plus.clients.ClientService;
+import com.thifuge.kaala_plus.containers.Container;
+import com.thifuge.kaala_plus.containers.ContainerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ClientService clientService;
+    private final ContainerService containerService;
 
     public void createOrder(Order order) {
         Client client = order.getClient();
@@ -72,5 +75,16 @@ public class OrderService {
         log.info("Deleting Order with id {}", id);
         Order order = this.findOrder(id);
         this.orderRepository.delete(order);
+    }
+
+    public Order addContainer(String reference, Order order) {
+        Container container = order.getContainer();
+        Container containerInDB = this.containerService.findContainer(container.getReference());
+
+        log.info("Adding order in container with order reference {}", reference);
+        Order orderInDB = this.findOrderByReference(reference);
+        orderInDB.setContainer(containerInDB);
+        orderInDB = this.orderRepository.save(orderInDB);
+        return orderInDB;
     }
 }
