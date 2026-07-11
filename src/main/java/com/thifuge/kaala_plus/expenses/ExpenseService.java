@@ -2,6 +2,8 @@ package com.thifuge.kaala_plus.expenses;
 
 import com.thifuge.kaala_plus.orders.Order;
 import com.thifuge.kaala_plus.orders.OrderService;
+import com.thifuge.kaala_plus.shared.entities.Currency;
+import com.thifuge.kaala_plus.shared.services.CurrencyService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +19,20 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
     private final OrderService orderService;
+    private final CurrencyService currencyService;
 
     public void createExpense(Expense expense) {
         Order order = expense.getOrder();
         Order orderInDB = this.orderService.findOrderByReference(order.getReference());
+
+        // find an existing currency or create a new one
+        Currency currency = expense.getCurrency();
+        Currency currencyInDB = this.currencyService.getCurrencyByName(currency.getName());
+        if (orderInDB == null) {
+            currencyInDB = this.currencyService.createCurrency(currency);
+        }
+        expense.setCurrency(currencyInDB);
+
         log.info("Creating new expense " + expense);
         expense.setOrder(orderInDB);
         this.expenseRepository.save(expense);
