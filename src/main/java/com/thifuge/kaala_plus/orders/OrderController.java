@@ -32,6 +32,11 @@ public class OrderController {
         return this.orderService.updateOrder(id, order);
     }
 
+    @PutMapping(path = "{reference}")
+    public Order addContainer(@PathVariable String reference, @RequestBody Order order) {
+        return this.orderService.addContainer(reference, order);
+    }
+
     @DeleteMapping(path = "{id}")
     public void deleteOrder(@PathVariable Integer id) {
         this.orderService.deleteOrder(id);
