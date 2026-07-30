@@ -2,7 +2,7 @@ package com.thifuge.kaala_plus.order_items;
 
 import com.thifuge.kaala_plus.orders.Order;
 import com.thifuge.kaala_plus.shared.entities.Currency;
-import com.thifuge.kaala_plus.shared.entities.SupplierProduct;
+import com.thifuge.kaala_plus.supplier_products.SupplierProduct;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
