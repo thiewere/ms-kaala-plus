@@ -1,4 +1,4 @@
-package com.thifuge.kaala_plus.shared.entities;
+package com.thifuge.kaala_plus.products;
 
 import jakarta.persistence.*;
 import lombok.Getter;

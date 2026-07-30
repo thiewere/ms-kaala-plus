@@ -1,6 +1,6 @@
 package com.thifuge.kaala_plus.supplier_products;
 
-import com.thifuge.kaala_plus.shared.entities.Product;
+import com.thifuge.kaala_plus.products.Product;
 import com.thifuge.kaala_plus.suppliers.Supplier;
 import jakarta.persistence.*;
 import lombok.Getter;
