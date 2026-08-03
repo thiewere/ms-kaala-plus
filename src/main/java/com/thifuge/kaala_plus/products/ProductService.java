@@ -39,7 +39,8 @@ public class ProductService {
    }
 
    public void deleteProduct(int id) {
-        log.info("Deleting product by id: {}", id);
-        this.productRepository.deleteById(id);
+        Product productInDB = this.findProduct(id);
+        log.info("Deleting product mit id: {}", id);
+        this.productRepository.delete(productInDB);
    }
 }
