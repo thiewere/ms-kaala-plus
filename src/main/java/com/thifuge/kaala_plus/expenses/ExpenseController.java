@@ -1,5 +1,6 @@
 package com.thifuge.kaala_plus.expenses;
 
+import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("expenses")
+@RequestMapping(ApiEndpoints.EXPENSES)
 public class ExpenseController {
 
     private final ExpenseService expenseService;

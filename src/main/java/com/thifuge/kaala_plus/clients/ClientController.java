@@ -1,5 +1,6 @@
 package com.thifuge.kaala_plus.clients;
 
+import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 @RestController
-@RequestMapping("clients")
+@RequestMapping(ApiEndpoints.CLIENTS)
 public class ClientController {
 
     private final ClientService clientService;

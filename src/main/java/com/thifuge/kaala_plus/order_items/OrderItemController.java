@@ -1,6 +1,7 @@
 package com.thifuge.kaala_plus.order_items;
 
 import com.thifuge.kaala_plus.orders.Order;
+import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("order_items")
+@RequestMapping(ApiEndpoints.ORDER_ITEMS)
 public class OrderItemController {
 
     private final OrderItemService orderItemService;

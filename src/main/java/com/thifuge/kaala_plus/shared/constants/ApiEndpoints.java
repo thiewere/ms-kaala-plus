@@ -4,8 +4,8 @@ public final class ApiEndpoints {
 
     public static final String API = "/api";
 
-    public static final String CLIENT = API + "/clients";
-    public static final String CONTAINER = API + "/containers";
+    public static final String CLIENTS = API + "/clients";
+    public static final String CONTAINERS = API + "/containers";
     public static final String EXPENSES = API + "/expenses";
     public static final String ORDER_ITEMS = API + "/order_items";
     public static final String ORDERS = API + "/orders";

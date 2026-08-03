@@ -1,5 +1,6 @@
 package com.thifuge.kaala_plus.containers;
 
+import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("containers")
+@RequestMapping(ApiEndpoints.CONTAINERS)
 public class ContainerController {
 
     private final ContainerService containerService;

@@ -1,5 +1,6 @@
 package com.thifuge.kaala_plus.products;
 
+import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +9,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("products")
+@RequestMapping(ApiEndpoints.PRODUCTS)
 public class ProductController {
 
     private ProductService productService;
