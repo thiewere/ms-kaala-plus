@@ -16,9 +16,8 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping
-    public void create(@RequestBody Client client) {
-        this.clientService.createClient(client);
-        log.info("New client created: {}", client);
+    public Client create(@RequestBody Client client) {
+        return this.clientService.createClient(client);
     }
 
     @GetMapping

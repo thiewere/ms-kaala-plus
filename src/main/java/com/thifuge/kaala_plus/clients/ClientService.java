@@ -15,9 +15,9 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
 
-    public void createClient(Client client) {
+    public Client createClient(Client client) {
         log.info("Creating a new client: {}", client);
-        clientRepository.save(client);
+        return this.clientRepository.save(client);
     }
 
     public List<Client> findAllClients() {
