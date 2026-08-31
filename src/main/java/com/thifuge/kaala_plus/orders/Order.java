@@ -52,6 +52,8 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "container_id")
     private Container container;
+    @Column(name = "description", length = Integer.MAX_VALUE)
+    private String description;
 
 
 }
