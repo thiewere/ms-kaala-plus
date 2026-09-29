@@ -21,13 +21,13 @@ public class Supplier {
     @Column(name = "supplier_id", nullable = false)
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 45)
+    @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
     private String name;
 
-    @Column(name = "phone", nullable = false, length = 25)
+    @Column(name = "phone", nullable = false, length = 50)
     private String phone;
 
-    @Column(name = "address", length = 50)
+    @Column(name = "address", length = Integer.MAX_VALUE)
     private String address;
 
     @ColumnDefault("now()")
