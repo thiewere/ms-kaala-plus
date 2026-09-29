@@ -1,7 +1,10 @@
 package com.thifuge.kaala_plus.orders;
 
+import com.thifuge.kaala_plus.orders.dto.CreateCompleteOrderRequest;
 import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,5 +44,12 @@ public class OrderController {
     @DeleteMapping(path = "{id}")
     public void deleteOrder(@PathVariable Integer id) {
         this.orderService.deleteOrder(id);
+    }
+
+    @PostMapping("/complete")
+    public ResponseEntity<?> createCompleteOrder(@RequestBody CreateCompleteOrderRequest request){
+        this.orderService.createCompleteOrder(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
