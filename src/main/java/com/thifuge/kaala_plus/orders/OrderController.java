@@ -1,6 +1,7 @@
 package com.thifuge.kaala_plus.orders;
 
 import com.thifuge.kaala_plus.orders.dto.CreateCompleteOrderRequest;
+import com.thifuge.kaala_plus.orders.dto.CreateOrderResponse;
 import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,9 +48,10 @@ public class OrderController {
     }
 
     @PostMapping("/complete")
-    public ResponseEntity<?> createCompleteOrder(@RequestBody CreateCompleteOrderRequest request){
-        this.orderService.createCompleteOrder(request);
+    public ResponseEntity<CreateOrderResponse> createCompleteOrder(@RequestBody CreateCompleteOrderRequest request){
+        CreateOrderResponse response = this.orderService.createCompleteOrder(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 }
