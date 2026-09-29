@@ -2,6 +2,7 @@ package com.thifuge.kaala_plus.shared.services;
 
 import com.thifuge.kaala_plus.shared.entities.Currency;
 import com.thifuge.kaala_plus.shared.repositories.CurrencyRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,9 @@ public class CurrencyService {
     public Currency getCurrencyByName(String name) {
         log.info("Getting currency by name {}", name);
         Optional<Currency> currency = this.currencyRepository.findByName(name);
-        return currency.orElse(null);
+        return currency.orElseThrow(() -> new EntityNotFoundException(
+                "Currency with name " + name + " not found"
+        ));
     }
 
     public Currency updateCurrency(Integer id, Currency currency) {
