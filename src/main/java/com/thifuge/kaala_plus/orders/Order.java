@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -38,8 +39,9 @@ public class Order {
     @Column(name = "completed_at")
     private LocalDate completedAt;
 
-    @Column(name = "order_state", length = 15)
-    private String orderState;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_state", length = 30)
+    private OrderState orderState;
 
     @ColumnDefault("now()")
     @Column(name = "updated_at")
@@ -54,6 +56,10 @@ public class Order {
     private Container container;
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
+
+    @ColumnDefault("0")
+    @Column(name = "totalprice", nullable = false)
+    private BigDecimal totalprice = BigDecimal.ZERO;
 
 
 }
