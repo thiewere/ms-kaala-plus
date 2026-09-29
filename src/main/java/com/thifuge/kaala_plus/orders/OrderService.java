@@ -8,6 +8,7 @@ import com.thifuge.kaala_plus.order_items.OrderItem;
 import com.thifuge.kaala_plus.order_items.OrderItemService;
 import com.thifuge.kaala_plus.orders.dto.CreateCompleteOrderRequest;
 import com.thifuge.kaala_plus.orders.dto.CreateOrderItemRequest;
+import com.thifuge.kaala_plus.orders.dto.CreateOrderResponse;
 import com.thifuge.kaala_plus.shared.entities.Currency;
 import com.thifuge.kaala_plus.shared.services.CurrencyService;
 import com.thifuge.kaala_plus.supplier_products.SupplierProduct;
@@ -37,7 +38,7 @@ public class OrderService {
     private final OrderItemService orderItemService;
 
     @Transactional
-    public void createCompleteOrder(CreateCompleteOrderRequest request){
+    public CreateOrderResponse createCompleteOrder(CreateCompleteOrderRequest request){
         Client client = this.clientService.findClientById(request.clientId());
 
         Currency currency = this.currencyService.getCurrencyByName(request.currency());
@@ -74,6 +75,11 @@ public class OrderService {
 
         order.setTotalprice(orderTotal);
 
+        return new CreateOrderResponse(
+                order.getId(),
+                order.getReference(),
+                order.getOrderState()
+        );
     }
 
     public void createOrder(Order order) {
