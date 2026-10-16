@@ -1,6 +1,7 @@
 package com.thifuge.kaala_plus.orders;
 
 import com.thifuge.kaala_plus.orders.dto.CreateCompleteOrderRequest;
+import com.thifuge.kaala_plus.orders.dto.CreateOrderRequest;
 import com.thifuge.kaala_plus.orders.dto.CreateOrderResponse;
 import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
@@ -18,8 +19,10 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public void create(@RequestBody Order order) {
-        this.orderService.createOrder(order);
+    public ResponseEntity<CreateOrderResponse> create(@RequestBody CreateOrderRequest request) {
+        CreateOrderResponse response = this.orderService.createOrder(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @GetMapping
