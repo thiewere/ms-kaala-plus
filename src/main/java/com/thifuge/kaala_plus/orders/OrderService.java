@@ -6,10 +6,7 @@ import com.thifuge.kaala_plus.containers.Container;
 import com.thifuge.kaala_plus.containers.ContainerService;
 import com.thifuge.kaala_plus.order_items.OrderItem;
 import com.thifuge.kaala_plus.order_items.OrderItemService;
-import com.thifuge.kaala_plus.orders.dto.CreateCompleteOrderRequest;
-import com.thifuge.kaala_plus.orders.dto.CreateOrderItemRequest;
-import com.thifuge.kaala_plus.orders.dto.CreateOrderRequest;
-import com.thifuge.kaala_plus.orders.dto.CreateOrderResponse;
+import com.thifuge.kaala_plus.orders.dto.*;
 import com.thifuge.kaala_plus.shared.entities.Currency;
 import com.thifuge.kaala_plus.shared.services.CurrencyService;
 import com.thifuge.kaala_plus.supplier_products.SupplierProduct;
@@ -107,9 +104,20 @@ public class OrderService {
         );
     }
 
-    public List<Order> findAllOrders() {
-        log.info("Finding all Orders");
-        return this.orderRepository.findAll();
+    public List<PendingOrderResponse> getPendingOrders(OrderState state) {
+        log.info("Finding all initiated Orders");
+        List<Order> pendingOrders = this.orderRepository.findByOrderStateOrderByCreatedAtAsc(state);
+
+        return pendingOrders.stream()
+                .map(order -> new PendingOrderResponse(
+                        order.getId(),
+                        order.getReference(),
+                        order.getClient().getFirstname(),
+                        order.getClient().getLastname(),
+                        order.getDescription(),
+                        order.getCreatedAt()
+                ))
+                .toList();
     }
 
     public Order findOrder(Integer id) {
