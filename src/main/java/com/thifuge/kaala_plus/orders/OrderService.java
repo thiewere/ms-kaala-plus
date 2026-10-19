@@ -126,6 +126,22 @@ public class OrderService {
         return order.orElseThrow(() -> new EntityNotFoundException(
                 "Order with id " + id + " not found"
         ));
+
+        return new OrderDetailsResponse(
+                order.getId(),
+                order.getClient().getId(),
+                order.getCurrency().getName(),
+                order.getDescription(),
+                order.getOrderState()
+        );
+    }
+
+    public Order findOrder(Integer id) {
+        log.info("Finding Order with id {}", id);
+        Optional<Order> orderInDb = this.orderRepository.findById(id);
+        return orderInDb.orElseThrow(() -> new EntityNotFoundException(
+                "Order with id " + id + " not found"
+        ));
     }
 
     public Order findOrderByReference(String reference) {
