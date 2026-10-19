@@ -36,6 +36,31 @@ public class OrderService {
     private final OrderItemService orderItemService;
 
     @Transactional
+    public CreateOrderResponse completeExistingOrder(Integer orderId, CompleteExistingOrderRequest request) {
+        Order order = this.findOrder(orderId);
+
+        if (order.getOrderState() != OrderState.INITIATED) {
+            throw new IllegalStateException("Only INITIATED orders can be completed");
+        }
+
+        if(request.items() == null || request.items().isEmpty()){
+            throw new IllegalArgumentException("At least one item is required");
+        }
+
+        BigDecimal orderTotal = addOrderItems(order, request.items());
+
+        order.setTotalprice(orderTotal);
+        order.setOrderState(OrderState.READY_FOR_CONFIRMATION);
+        order.setUpdatedAt(LocalDate.now());
+
+        return new CreateOrderResponse(
+                order.getId(),
+                order.getReference(),
+                order.getOrderState()
+        );
+    }
+
+    @Transactional
     public CreateOrderResponse createCompleteOrder(CreateCompleteOrderRequest request){
         Client client = this.clientService.findClientById(request.clientId());
 
