@@ -33,6 +33,13 @@ public class OrderController {
         return ResponseEntity.ok(orderDetailsResponse);
     }
 
+    @PutMapping("{id}/complete")
+    public ResponseEntity<CreateOrderResponse> completeExistingOrder(@PathVariable Integer id, @RequestBody CompleteExistingOrderRequest request) {
+        return ResponseEntity.ok(
+                this.orderService.completeExistingOrder(id, request)
+        );
+    }
+
     @PutMapping(path = "{id}")
     public Order updateOrder(@PathVariable Integer id, @RequestBody Order order) {
         return this.orderService.updateOrder(id, order);
