@@ -51,25 +51,7 @@ public class OrderService {
         order.setUpdatedAt(LocalDate.now());
         this.orderRepository.save(order);
 
-        BigDecimal orderTotal = BigDecimal.ZERO;
-
-        for(CreateOrderItemRequest itemRequest : request.items()){
-            SupplierProduct supplierProduct = this.supplierProductService
-                    .findSupplierProduct(itemRequest.supplierProductId());
-
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setSupplierProduct(supplierProduct);
-            orderItem.setQuantity(itemRequest.quantity());
-            orderItem.setUnitPrice(itemRequest.unitPrice());
-            BigDecimal totalPrice = itemRequest.unitPrice()
-                            .multiply(BigDecimal
-                            .valueOf(itemRequest.quantity()));
-            orderItem.setTotalPrice(totalPrice);
-
-            orderTotal = orderTotal.add(totalPrice);
-            this.orderItemService.createOrderItem(orderItem);
-        }
+        BigDecimal orderTotal = addOrderItems(order, request.items());
 
         order.setTotalprice(orderTotal);
 
@@ -104,6 +86,30 @@ public class OrderService {
         );
     }
 
+    private BigDecimal addOrderItems(Order order, List<CreateOrderItemRequest> items){
+        BigDecimal orderTotal = BigDecimal.ZERO;
+
+        for(CreateOrderItemRequest itemRequest : items){
+            SupplierProduct supplierProduct = this.supplierProductService
+                    .findSupplierProduct(itemRequest.supplierProductId());
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setSupplierProduct(supplierProduct);
+            orderItem.setQuantity(itemRequest.quantity());
+            orderItem.setUnitPrice(itemRequest.unitPrice());
+            BigDecimal totalPrice = itemRequest.unitPrice()
+                    .multiply(BigDecimal
+                            .valueOf(itemRequest.quantity()));
+            orderItem.setTotalPrice(totalPrice);
+
+            orderTotal = orderTotal.add(totalPrice);
+            this.orderItemService.createOrderItem(orderItem);
+        }
+
+        return orderTotal;
+    }
+
     public List<PendingOrderResponse> getPendingOrders(OrderState state) {
         log.info("Finding all initiated Orders");
         List<Order> pendingOrders = this.orderRepository.findByOrderStateOrderByCreatedAtAsc(state);
@@ -120,10 +126,10 @@ public class OrderService {
                 .toList();
     }
 
-    public Order findOrder(Integer id) {
+    public OrderDetailsResponse findOrderById(Integer id) {
         log.info("Finding Order with id {}", id);
-        Optional<Order> order = this.orderRepository.findById(id);
-        return order.orElseThrow(() -> new EntityNotFoundException(
+        Optional<Order> orderInDb = this.orderRepository.findById(id);
+        Order order = orderInDb.orElseThrow(() -> new EntityNotFoundException(
                 "Order with id " + id + " not found"
         ));
 

@@ -1,9 +1,6 @@
 package com.thifuge.kaala_plus.orders;
 
-import com.thifuge.kaala_plus.orders.dto.CreateCompleteOrderRequest;
-import com.thifuge.kaala_plus.orders.dto.CreateOrderRequest;
-import com.thifuge.kaala_plus.orders.dto.CreateOrderResponse;
-import com.thifuge.kaala_plus.orders.dto.PendingOrderResponse;
+import com.thifuge.kaala_plus.orders.dto.*;
 import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,12 +24,13 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PendingOrderResponse>> getPendingOrders(@RequestParam(required = false) Integer page, @RequestParam(required = true) OrderState state) {
+    public ResponseEntity<List<PendingOrderResponse>> getPendingOrders(@RequestParam(required = true) OrderState state) {
         return ResponseEntity.ok(this.orderService.getPendingOrders(state));
     }
     @GetMapping(path = "{id}")
-    public Order findOrder(@PathVariable Integer id) {
-        return this.orderService.findOrder(id);
+    public ResponseEntity<OrderDetailsResponse> findOrder(@PathVariable Integer id) {
+        OrderDetailsResponse orderDetailsResponse = this.orderService.findOrderById(id);
+        return ResponseEntity.ok(orderDetailsResponse);
     }
 
     @PutMapping(path = "{id}")
