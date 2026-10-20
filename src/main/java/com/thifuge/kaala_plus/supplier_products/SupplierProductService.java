@@ -60,6 +60,11 @@ public class SupplierProductService {
 
     @Transactional
     public CreateSupplierProductResponse createProductWithSupplier(CreateProductWithSupplierRequest request) {
+        if(this.productRepository.existsByNameIgnoreCase(request.name())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "A product with this name already exists"
+            );
+        }
         Product product = new Product();
         product.setName(request.name());
         product.setBrand(request.brand());
