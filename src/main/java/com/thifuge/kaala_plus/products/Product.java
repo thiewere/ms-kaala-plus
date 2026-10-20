@@ -14,8 +14,12 @@ public class Product {
     @Column(name = "product_id", nullable = false)
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 40)
+    @Column(name = "name", nullable = false, unique = true, length = 100)
     private String name;
+    @Column(name = "brand", length = 60)
+    private String brand;
+    @Column(name = "description", length = 500)
+    private String description;
 
 
 }
