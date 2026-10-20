@@ -1,9 +1,17 @@
 package com.thifuge.kaala_plus.supplier_products;
 
+import com.thifuge.kaala_plus.products.Product;
+import com.thifuge.kaala_plus.products.ProductRepository;
+import com.thifuge.kaala_plus.supplier_products.dto.CreateProductWithSupplierRequest;
+import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductResponse;
+import com.thifuge.kaala_plus.suppliers.Supplier;
+import com.thifuge.kaala_plus.suppliers.SupplierRepository;
+import com.thifuge.kaala_plus.suppliers.SupplierService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +22,35 @@ import java.util.Optional;
 public class SupplierProductService {
 
     private final SupplierProductRepository supplierProductRepository;
+    private final SupplierRepository supplierRepository;
+    private final SupplierService supplierService;
+    private final ProductRepository productRepository;
+
+    @Transactional
+    public CreateSupplierProductResponse createProductWithSupplier(CreateProductWithSupplierRequest request) {
+        Product product = new Product();
+        product.setName(request.name());
+        product.setBrand(request.brand());
+        product.setDescription(request.description());
+
+        product = this.productRepository.save(product);
+
+        Supplier supplier = this.supplierService.findSupplier(request.supplierId());
+
+        SupplierProduct supplierProduct = new SupplierProduct();
+        supplierProduct.setSupplier(supplier);
+        supplierProduct.setProduct(product);
+        supplierProduct.setUnitPrice(request.unitPrice());
+
+        supplierProduct = this.supplierProductRepository.save(supplierProduct);
+
+        return new CreateSupplierProductResponse(
+                supplierProduct.getId(),
+                supplierProduct.getProduct().getId(),
+                supplierProduct.getSupplier().getId(),
+                supplierProduct.getUnitPrice()
+        );
+    }
 
     public void createSupplierProduct(SupplierProduct supplierProduct) {
         log.info("Creating a new supplier_product: {}", supplierProduct);
