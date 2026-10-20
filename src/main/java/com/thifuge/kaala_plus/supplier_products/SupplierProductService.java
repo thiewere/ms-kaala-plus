@@ -2,7 +2,9 @@ package com.thifuge.kaala_plus.supplier_products;
 
 import com.thifuge.kaala_plus.products.Product;
 import com.thifuge.kaala_plus.products.ProductRepository;
+import com.thifuge.kaala_plus.products.ProductService;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateProductWithSupplierRequest;
+import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductRequest;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductResponse;
 import com.thifuge.kaala_plus.suppliers.Supplier;
 import com.thifuge.kaala_plus.suppliers.SupplierRepository;
@@ -10,8 +12,10 @@ import com.thifuge.kaala_plus.suppliers.SupplierService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +29,34 @@ public class SupplierProductService {
     private final SupplierRepository supplierRepository;
     private final SupplierService supplierService;
     private final ProductRepository productRepository;
+    private final ProductService productService;
+
+    @Transactional
+    public CreateSupplierProductResponse createSupplierProduct(CreateSupplierProductRequest request) {
+        if (this.supplierProductRepository
+                .existsBySupplierIdAndProductId(request.supplierId(), request.productId())
+        ) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This Supplier is already associated with this product");
+        }
+
+        Product product = this.productService.findProduct(request.productId());
+
+        Supplier supplier = this.supplierService.findSupplier(request.supplierId());
+
+        SupplierProduct supplierProduct = new SupplierProduct();
+        supplierProduct.setSupplier(supplier);
+        supplierProduct.setProduct(product);
+        supplierProduct.setUnitPrice(request.unitPrice());
+
+        supplierProduct = this.supplierProductRepository.save(supplierProduct);
+
+        return new CreateSupplierProductResponse(
+                supplierProduct.getId(),
+                supplierProduct.getProduct().getId(),
+                supplierProduct.getSupplier().getId(),
+                supplierProduct.getUnitPrice()
+        );
+    }
 
     @Transactional
     public CreateSupplierProductResponse createProductWithSupplier(CreateProductWithSupplierRequest request) {
