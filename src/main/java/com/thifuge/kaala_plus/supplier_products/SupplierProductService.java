@@ -3,6 +3,8 @@ package com.thifuge.kaala_plus.supplier_products;
 import com.thifuge.kaala_plus.products.Product;
 import com.thifuge.kaala_plus.products.ProductRepository;
 import com.thifuge.kaala_plus.products.ProductService;
+import com.thifuge.kaala_plus.shared.entities.Currency;
+import com.thifuge.kaala_plus.shared.services.CurrencyService;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateProductWithSupplierRequest;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductRequest;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductResponse;
@@ -30,6 +32,7 @@ public class SupplierProductService {
     private final SupplierService supplierService;
     private final ProductRepository productRepository;
     private final ProductService productService;
+    private final CurrencyService  currencyService;
 
     @Transactional
     public CreateSupplierProductResponse createSupplierProduct(CreateSupplierProductRequest request) {
@@ -43,10 +46,13 @@ public class SupplierProductService {
 
         Supplier supplier = this.supplierService.findSupplier(request.supplierId());
 
+        Currency currency = this.currencyService.getCurrencyByName(request.currency());
+
         SupplierProduct supplierProduct = new SupplierProduct();
         supplierProduct.setSupplier(supplier);
         supplierProduct.setProduct(product);
         supplierProduct.setUnitPrice(request.unitPrice());
+        supplierProduct.setCurrency(currency);
 
         supplierProduct = this.supplierProductRepository.save(supplierProduct);
 
@@ -75,10 +81,13 @@ public class SupplierProductService {
 
         Supplier supplier = this.supplierService.findSupplier(request.supplierId());
 
+        Currency currency = this.currencyService.getCurrencyByName(request.currency());
+
         SupplierProduct supplierProduct = new SupplierProduct();
         supplierProduct.setSupplier(supplier);
         supplierProduct.setProduct(product);
         supplierProduct.setUnitPrice(request.unitPrice());
+        supplierProduct.setCurrency(currency);
 
         supplierProduct = this.supplierProductRepository.save(supplierProduct);
 
