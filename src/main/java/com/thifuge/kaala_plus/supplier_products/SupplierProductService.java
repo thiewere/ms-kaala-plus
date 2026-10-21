@@ -4,7 +4,9 @@ import com.thifuge.kaala_plus.products.Product;
 import com.thifuge.kaala_plus.products.ProductRepository;
 import com.thifuge.kaala_plus.products.ProductService;
 import com.thifuge.kaala_plus.shared.entities.Currency;
+import com.thifuge.kaala_plus.shared.repositories.CurrencyRepository;
 import com.thifuge.kaala_plus.shared.services.CurrencyService;
+import com.thifuge.kaala_plus.supplier_products.dto.CreateProductAndSupplierRequest;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateProductWithSupplierRequest;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductRequest;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductResponse;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +36,49 @@ public class SupplierProductService {
     private final ProductRepository productRepository;
     private final ProductService productService;
     private final CurrencyService  currencyService;
+    private final CurrencyRepository currencyRepository;
+
+    @Transactional
+    public CreateSupplierProductResponse createProductAndSupplier(CreateProductAndSupplierRequest request) {
+        if (this.productRepository.existsByNameIgnoreCase(request.name())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Product already exists");
+        }
+
+        if (!this.currencyRepository.existsByNameIgnoreCase(request.currency())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Currency does not supported. Choose one of the following: USD, RMB, GNF");
+        }
+
+        Product product = new  Product();
+        product.setName(request.name());
+        product.setBrand(request.brand());
+        product.setDescription(request.description());
+        product = this.productRepository.save(product);
+
+        Supplier supplier = new Supplier();
+        supplier.setName(request.supplierName());
+        supplier.setPhone(request.supplierPhone());
+        supplier.setAddress(request.supplierAddress());
+        supplier.setCreatedAt(LocalDate.now());
+        supplier.setUpdatedAt(LocalDate.now());
+        supplier = this.supplierRepository.save(supplier);
+
+        Currency currency = this.currencyService.getCurrencyByName(request.currency());
+
+        SupplierProduct supplierProduct = new SupplierProduct();
+        supplierProduct.setSupplier(supplier);
+        supplierProduct.setProduct(product);
+        supplierProduct.setUnitPrice(request.unitPrice());
+        supplierProduct.setCurrency(currency);
+        supplierProduct =  this.supplierProductRepository.save(supplierProduct);
+        return new CreateSupplierProductResponse(
+                supplierProduct.getId(),
+                supplierProduct.getProduct().getId(),
+                supplierProduct.getSupplier().getId(),
+                supplierProduct.getUnitPrice(),
+                supplierProduct.getCurrency().getName()
+        );
+    }
 
     @Transactional
     public CreateSupplierProductResponse createSupplierProduct(CreateSupplierProductRequest request) {
