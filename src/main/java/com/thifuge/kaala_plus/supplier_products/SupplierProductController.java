@@ -1,6 +1,7 @@
 package com.thifuge.kaala_plus.supplier_products;
 
 import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
+import com.thifuge.kaala_plus.supplier_products.dto.CreateProductAndSupplierRequest;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateProductWithSupplierRequest;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductRequest;
 import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductResponse;
@@ -15,6 +16,13 @@ import java.util.List;
 public class SupplierProductController {
 
     private final SupplierProductService supplierProductService;
+
+    @PostMapping("/new-supp-product")
+    public CreateSupplierProductResponse createProductAndSupplier(
+            @RequestBody CreateProductAndSupplierRequest request
+            ) {
+        return this.supplierProductService.createProductAndSupplier(request);
+    }
 
     @PostMapping("/new-product")
     public CreateSupplierProductResponse createProductWithSupplier(@RequestBody CreateProductWithSupplierRequest request){
