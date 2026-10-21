@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public record CreateSupplierProductRequest(
         Integer productId,
         Integer supplierId,
-        BigDecimal unitPrice
+        BigDecimal unitPrice,
+        String currency
 ) {
 }

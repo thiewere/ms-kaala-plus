@@ -7,6 +7,7 @@ public record CreateProductWithSupplierRequest(
         String brand,
         String description,
         Integer supplierId,
-        BigDecimal unitPrice
+        BigDecimal unitPrice,
+        String currency
 ) {
 }
