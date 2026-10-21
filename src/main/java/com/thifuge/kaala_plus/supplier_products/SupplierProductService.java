@@ -54,7 +54,8 @@ public class SupplierProductService {
                 supplierProduct.getId(),
                 supplierProduct.getProduct().getId(),
                 supplierProduct.getSupplier().getId(),
-                supplierProduct.getUnitPrice()
+                supplierProduct.getUnitPrice(),
+                supplierProduct.getCurrency().getName()
         );
     }
 
@@ -85,7 +86,8 @@ public class SupplierProductService {
                 supplierProduct.getId(),
                 supplierProduct.getProduct().getId(),
                 supplierProduct.getSupplier().getId(),
-                supplierProduct.getUnitPrice()
+                supplierProduct.getUnitPrice(),
+                supplierProduct.getCurrency().getName()
         );
     }
 

@@ -6,6 +6,7 @@ public record CreateSupplierProductResponse(
         Integer id,
         Integer productId,
         Integer supplierId,
-        BigDecimal unitPrice
+        BigDecimal unitPrice,
+        String currency
 ) {
 }
