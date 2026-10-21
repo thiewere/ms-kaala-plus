@@ -1,6 +1,7 @@
 package com.thifuge.kaala_plus.supplier_products;
 
 import com.thifuge.kaala_plus.products.Product;
+import com.thifuge.kaala_plus.shared.entities.Currency;
 import com.thifuge.kaala_plus.suppliers.Supplier;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,6 +29,10 @@ public class SupplierProduct {
 
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 
 
 }
