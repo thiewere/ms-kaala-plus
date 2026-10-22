@@ -4,6 +4,7 @@ import com.thifuge.kaala_plus.orders.Order;
 import com.thifuge.kaala_plus.orders.OrderService;
 import com.thifuge.kaala_plus.orders.OrderState;
 import com.thifuge.kaala_plus.payments.dto.CreatePaymentResponse;
+import com.thifuge.kaala_plus.payments.dto.OrderPaymentSummaryResponse;
 import com.thifuge.kaala_plus.payments.dto.request.CreatePaymentRequest;
 import com.thifuge.kaala_plus.shared.entities.Currency;
 import com.thifuge.kaala_plus.shared.services.CurrencyService;
@@ -29,6 +30,31 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final CurrencyService currencyService;
     private final OrderService orderService;
+
+    @Transactional(readOnly = true)
+    public OrderPaymentSummaryResponse getOrderPaymentSummary(String orderReference) {
+       Order order = this.orderService.findOrderByReference(orderReference);
+
+       List<Payment> payments = this.paymentRepository
+               .findByOrderIdOrderByPaymentDateAscIdAsc(order.getId());
+
+       BigDecimal totalPaid = this.paymentRepository.sumConvertedAmountByOrderId(order.getId());
+
+       BigDecimal remainingAmount = order.getTotalprice().subtract(totalPaid);
+
+       List<CreatePaymentResponse> paymentResponses = payments.stream()
+               .map(this::toResponse)
+               .toList();
+
+       return new OrderPaymentSummaryResponse(
+               order.getReference(),
+               order.getTotalprice(),
+               totalPaid,
+               remainingAmount,
+               order.getCurrency().getName(),
+               paymentResponses
+       );
+    }
 
     @Transactional
     public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
