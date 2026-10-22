@@ -36,6 +36,14 @@ public class PaymentService {
 
         Order order = this.orderService.findOrderByReference(request.orderReference());
 
+        // Ensure that the order is allowed to receive payment
+        if (order.getOrderState() != OrderState.CONFIRMED
+                && order.getOrderState() != OrderState.IN_PROGRESS) {
+            throw new IllegalArgumentException(
+                    "Payments are not allowed for orders in state: " + order.getOrderState()
+            );
+        }
+
         Currency currency = this.currencyService.getCurrency(request.currencyId());
 
         Optional<Payment> firstPayment = this.paymentRepository.findFirstByOrderIdOrderByIdAsc(order.getId());
