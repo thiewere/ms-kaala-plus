@@ -1,10 +1,12 @@
 package com.thifuge.kaala_plus.payments;
 
 import com.thifuge.kaala_plus.payments.dto.CreatePaymentResponse;
+import com.thifuge.kaala_plus.payments.dto.OrderPaymentSummaryResponse;
 import com.thifuge.kaala_plus.payments.dto.request.CreatePaymentRequest;
 import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +17,14 @@ import java.util.List;
 public class PaymentController {
 
     private final PaymentService paymentService;
+
+    @GetMapping("/orders/{orderReference}/summary")
+    public ResponseEntity<OrderPaymentSummaryResponse> getOrderPaymentSummary(
+            @PathVariable String orderReference) {
+        return ResponseEntity.ok(
+                this.paymentService.getOrderPaymentSummary(orderReference)
+        );
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
