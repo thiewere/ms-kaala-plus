@@ -8,4 +8,6 @@ public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
 
     Optional<Supplier> findByName(String name);
     Optional<Supplier> findByPhone(String phone);
+
+    boolean existsByPhone(String phone);
 }
