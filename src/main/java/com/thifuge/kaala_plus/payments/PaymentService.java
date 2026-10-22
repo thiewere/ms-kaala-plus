@@ -9,8 +9,10 @@ import com.thifuge.kaala_plus.shared.services.CurrencyService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,16 +32,16 @@ public class PaymentService {
     @Transactional
     public void createPayment(CreatePaymentRequest request) {
 
-        if (request.amount() == null || request.amount().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Payment amount must be greater than zero");
+        if (request == null || request.amount() == null || request.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment amount must be greater than zero");
         }
 
-        Order order = this.orderService.findOrderByReference(request.orderReference());
+        Order order = this.orderService.findOrderByReferenceForUpdate(request.orderReference());
 
         // Ensure that the order is allowed to receive payment
         if (order.getOrderState() != OrderState.CONFIRMED
                 && order.getOrderState() != OrderState.IN_PROGRESS) {
-            throw new IllegalArgumentException(
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "Payments are not allowed for orders in state: " + order.getOrderState()
             );
         }
@@ -52,7 +54,7 @@ public class PaymentService {
             Currency firstCurrency = firstPayment.get().getCurrency();
 
             if (!firstCurrency.getId().equals(currency.getId())) {
-                throw new IllegalArgumentException("All payments for the same order must use the same currency");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "All payments for the same order must use the same currency");
             }
         }
 
@@ -61,11 +63,11 @@ public class PaymentService {
 
         if (order.getCurrency().getId().equals(currency.getId())) {
             exchangeRate = BigDecimal.ONE;
-            convertedAmount = request.amount();
+            convertedAmount = request.amount().setScale(2, RoundingMode.HALF_UP);
         } else {
             exchangeRate = request.exchangeRate();
             if (exchangeRate == null || exchangeRate.compareTo(BigDecimal.ZERO) <= 0) {
-                throw new IllegalArgumentException("Exchange rate must be greater than zero");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Exchange rate must be greater than zero");
             }
 
             convertedAmount = request.amount().multiply(exchangeRate).setScale(2, RoundingMode.HALF_UP);
@@ -79,7 +81,7 @@ public class PaymentService {
 
         // verify the new payment
         if (convertedAmount.compareTo(remainingAmount) > 0) {
-            throw new IllegalArgumentException("Payment amount exceeds the remaining balance");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Payment amount exceeds the remaining balance");
         }
 
         PaymentType paymentType = convertedAmount.compareTo(remainingAmount) == 0
@@ -89,16 +91,17 @@ public class PaymentService {
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setCurrency(currency);
-        payment.setAmount(convertedAmount);
+        payment.setAmount(request.amount());
         payment.setExchangeRate(exchangeRate);
         payment.setPaymentType(paymentType);
-        payment.setExchangeRate(exchangeRate);
         payment.setConvertedAmount(convertedAmount);
         payment.setPaymentDate(
                 request.paymentDate() != null
                     ? request.paymentDate() : LocalDate.now()
         );
         payment.setNote(request.note());
+        payment.setCreatedAt(LocalDate.now());
+        payment.setUpdatedAt(LocalDate.now());
         this.paymentRepository.save(payment);
 
         if (paymentType == PaymentType.FINAL) {
