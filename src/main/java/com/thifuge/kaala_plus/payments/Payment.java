@@ -39,8 +39,9 @@ public class Payment {
     @Column(name = "payment_date")
     private LocalDate paymentDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_type", nullable = false, length = 20)
-    private String paymentType;
+    private PaymentType paymentType;
 
     @Column(name = "note", length = 50)
     private String note;
