@@ -33,7 +33,7 @@ public class PaymentController {
     }
 
     @GetMapping
-    public List<Payment> findAllPayments() {
+    public List<CreatePaymentResponse> findAllPayments() {
         return this.paymentService.findAllPayments();
     }
 
