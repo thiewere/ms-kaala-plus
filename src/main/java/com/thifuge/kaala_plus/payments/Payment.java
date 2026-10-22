@@ -53,5 +53,11 @@ public class Payment {
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
+    @Column(name = "exchange_rate", precision = 20, scale = 10)
+    private BigDecimal exchangeRate;
+
+    @Column(name = "converted_amount", precision = 19, scale = 2)
+    private BigDecimal convertedAmount;
+
 
 }
