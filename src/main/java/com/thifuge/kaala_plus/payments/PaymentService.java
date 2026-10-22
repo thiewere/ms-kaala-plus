@@ -3,6 +3,7 @@ package com.thifuge.kaala_plus.payments;
 import com.thifuge.kaala_plus.orders.Order;
 import com.thifuge.kaala_plus.orders.OrderService;
 import com.thifuge.kaala_plus.orders.OrderState;
+import com.thifuge.kaala_plus.payments.dto.CreatePaymentResponse;
 import com.thifuge.kaala_plus.payments.dto.request.CreatePaymentRequest;
 import com.thifuge.kaala_plus.shared.entities.Currency;
 import com.thifuge.kaala_plus.shared.services.CurrencyService;
@@ -30,7 +31,7 @@ public class PaymentService {
     private final OrderService orderService;
 
     @Transactional
-    public void createPayment(CreatePaymentRequest request) {
+    public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
 
         if (request == null || request.amount() == null || request.amount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment amount must be greater than zero");
@@ -109,7 +110,21 @@ public class PaymentService {
         }else  {
             order.setOrderState(OrderState.IN_PROGRESS);
         }
+        return  this.toResponse(payment);
+    }
 
+    private CreatePaymentResponse toResponse(Payment payment) {
+        return new CreatePaymentResponse(
+                payment.getId(),
+                payment.getOrder().getReference(),
+                payment.getAmount(),
+                payment.getCurrency().getName(),
+                payment.getExchangeRate(),
+                payment.getConvertedAmount(),
+                payment.getPaymentType(),
+                payment.getPaymentDate(),
+                payment.getNote()
+        );
     }
 
     public void createPayment(Payment payment) {
