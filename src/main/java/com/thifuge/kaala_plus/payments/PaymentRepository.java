@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
@@ -17,4 +18,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
         WHERE p.order.id = :orderId
     """)
     BigDecimal sumConvertedAmountByOrderId(@Param("orderId")  Integer orderId);
+
+    List<Payment> findByOrderIdOrderByPaymentDateAscIdAsc(Integer orderId);
 }
