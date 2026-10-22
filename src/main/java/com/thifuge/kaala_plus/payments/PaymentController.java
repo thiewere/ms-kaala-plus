@@ -33,13 +33,17 @@ public class PaymentController {
     }
 
     @GetMapping
-    public List<CreatePaymentResponse> findAllPayments() {
-        return this.paymentService.findAllPayments();
+    public ResponseEntity<List<CreatePaymentResponse>> findAllPayments() {
+        return ResponseEntity.ok(
+                this.paymentService.findAllPayments()
+        );
     }
 
     @GetMapping(path = "{id}")
-    public Payment findPayment(@PathVariable Integer id) {
-        return this.paymentService.findPayment(id);
+    public ResponseEntity<CreatePaymentResponse> findPayment(@PathVariable Integer id) {
+        return ResponseEntity.ok(
+                this.paymentService.findPaymentById(id)
+        );
     }
 
     @PutMapping(path = "{id}")
