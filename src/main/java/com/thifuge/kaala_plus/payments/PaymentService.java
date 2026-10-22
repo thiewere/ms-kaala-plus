@@ -153,23 +153,6 @@ public class PaymentService {
         );
     }
 
-    public void createPayment(Payment payment) {
-        // find the target order
-        Order order = payment.getOrder();
-        Order orderInDB = this.orderService.findOrderByReference(order.getReference());
-        payment.setOrder(orderInDB);
-
-        // find the target currency or create a new one
-        Currency currency = payment.getCurrency();
-        Currency currencyInDB = this.currencyService.getCurrencyByName(currency.getName());
-        if (currencyInDB == null) {
-            currencyInDB = this.currencyService.createCurrency(currency);
-        }
-        payment.setCurrency(currencyInDB);
-        log.info("Creating a new payment {}", payment);
-        this.paymentRepository.save(payment);
-    }
-
     public List<Payment> findAllPayments() {
         log.info("Finding all payments");
         return this.paymentRepository.findAll();
