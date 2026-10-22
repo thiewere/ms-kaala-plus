@@ -153,9 +153,13 @@ public class PaymentService {
         );
     }
 
-    public List<Payment> findAllPayments() {
+    @Transactional(readOnly = true)
+    public List<CreatePaymentResponse> findAllPayments() {
         log.info("Finding all payments");
-        return this.paymentRepository.findAll();
+        return this.paymentRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     public Payment findPayment(Integer id) {
