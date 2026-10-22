@@ -162,6 +162,12 @@ public class PaymentService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public CreatePaymentResponse findPaymentById(Integer id) {
+        log.info("Finding a payment with id {}", id);
+        return toResponse(this.findPayment(id));
+    }
+
     public Payment findPayment(Integer id) {
         log.info("Finding a payment with id {}", id);
         Optional<Payment> payment = this.paymentRepository.findById(id);
