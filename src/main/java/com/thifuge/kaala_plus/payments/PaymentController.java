@@ -1,5 +1,6 @@
 package com.thifuge.kaala_plus.payments;
 
+import com.thifuge.kaala_plus.payments.dto.request.CreatePaymentRequest;
 import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,8 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping
-    public void  createPayment(@RequestBody Payment payment) {
-        this.paymentService.createPayment(payment);
+    public void  createPayment(@RequestBody CreatePaymentRequest request) {
+        this.paymentService.createPayment(request);
     }
 
     @GetMapping
