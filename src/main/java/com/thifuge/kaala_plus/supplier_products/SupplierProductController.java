@@ -1,10 +1,7 @@
 package com.thifuge.kaala_plus.supplier_products;
 
 import com.thifuge.kaala_plus.shared.constants.ApiEndpoints;
-import com.thifuge.kaala_plus.supplier_products.dto.CreateProductAndSupplierRequest;
-import com.thifuge.kaala_plus.supplier_products.dto.CreateProductWithSupplierRequest;
-import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductRequest;
-import com.thifuge.kaala_plus.supplier_products.dto.CreateSupplierProductResponse;
+import com.thifuge.kaala_plus.supplier_products.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +13,13 @@ import java.util.List;
 public class SupplierProductController {
 
     private final SupplierProductService supplierProductService;
+
+    @PostMapping("/new-supplier")
+    public CreateSupplierProductResponse createSupplierWithProduct(
+            @RequestBody CreateSupplierWithProductRequest request
+            ){
+        return this.supplierProductService.createSupplierWithProduct(request);
+    }
 
     @PostMapping("/new-supp-product")
     public CreateSupplierProductResponse createProductAndSupplier(
