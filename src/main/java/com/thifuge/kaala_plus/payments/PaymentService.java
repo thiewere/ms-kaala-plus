@@ -171,28 +171,16 @@ public class PaymentService {
     }
 
     public Payment updatePayment(Integer id, Payment payment) {
-        Payment paymentInDB = this.findPayment(id);
-
-        log.info("Updating a payment with id {}", id);
-        Currency currency = payment.getCurrency();
-        Currency currencyInDB = this.currencyService.getCurrencyByName(currency.getName());
-        if (currencyInDB == null) {
-            currencyInDB = this.currencyService.createCurrency(currency);
-        }
-        paymentInDB.setCurrency(currencyInDB);
-        paymentInDB.setAmount(payment.getAmount());
-        paymentInDB.setPaymentDate(payment.getPaymentDate());
-        paymentInDB.setPaymentType(payment.getPaymentType());
-        paymentInDB.setNote(payment.getNote());
-        paymentInDB.setUpdatedAt(payment.getUpdatedAt());
-
-        paymentInDB = this.paymentRepository.save(paymentInDB);
-        return paymentInDB;
+        throw new ResponseStatusException(
+                HttpStatus.METHOD_NOT_ALLOWED,
+                "Payment modification is not supported"
+        );
     }
 
     public void deletePayment(Integer id) {
-        Payment paymentInDB = this.findPayment(id);
-        log.info("Deleting a payment with id {}", id);
-        this.paymentRepository.delete(paymentInDB);
+        throw new ResponseStatusException(
+                HttpStatus.METHOD_NOT_ALLOWED,
+                "Payment deletion is not supported"
+        );
     }
 }
