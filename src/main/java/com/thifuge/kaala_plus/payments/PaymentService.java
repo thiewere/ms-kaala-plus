@@ -149,8 +149,10 @@ public class PaymentService {
                 payment.getConvertedAmount(),
                 payment.getPaymentType(),
                 payment.getPaymentDate(),
-                payment.getNote()
-        );
+                payment.getNote(),
+                payment.getOrder().getClient().getFirstname(),
+                payment.getOrder().getClient().getLastname(),
+                payment.getOrder().getCurrency().getName());
     }
 
     @Transactional(readOnly = true)
