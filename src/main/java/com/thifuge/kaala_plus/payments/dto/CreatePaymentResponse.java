@@ -14,6 +14,9 @@ public record CreatePaymentResponse(
         BigDecimal convertedAmount,
         PaymentType paymentType,
         LocalDate paymentDate,
-        String note
-) {
+        String note,
+        String clientFirstname,
+        String clientLastname,
+        String orderCurrency)
+{
 }
