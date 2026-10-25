@@ -135,6 +135,22 @@ public class OrderService {
         return orderTotal;
     }
 
+    @Transactional(readOnly = true)
+    public List<ConfirmedOrderResponse> findOrdersByStates(
+            List<OrderState> states
+    ){
+        return this.orderRepository.findByOrderStateIn(states)
+                .stream()
+                .map(order -> new ConfirmedOrderResponse(
+                        order.getReference(),
+                        order.getClient().getFirstname(),
+                        order.getClient().getLastname(),
+                        order.getTotalprice(),
+                        order.getCurrency().getName(),
+                        order.getOrderState()
+                )).toList();
+    }
+
     public List<PendingOrderResponse> getPendingOrders(OrderState state) {
         log.info("Finding all initiated Orders");
         List<Order> pendingOrders = this.orderRepository.findByOrderStateOrderByCreatedAtAsc(state);
