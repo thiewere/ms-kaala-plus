@@ -16,6 +16,15 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @GetMapping("/confirmed")
+    public ResponseEntity<List<ConfirmedOrderResponse>> findOrdersByStates(
+            @RequestParam List<OrderState> states
+    ){
+        return ResponseEntity.ok(
+                this.orderService.findOrdersByStates(states)
+        );
+    }
+
     @PostMapping
     public ResponseEntity<CreateOrderResponse> create(@RequestBody CreateOrderRequest request) {
         CreateOrderResponse response = this.orderService.createOrder(request);
