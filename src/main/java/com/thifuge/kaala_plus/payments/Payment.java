@@ -43,7 +43,7 @@ public class Payment {
     @Column(name = "payment_type", nullable = false, length = 20)
     private PaymentType paymentType;
 
-    @Column(name = "note", length = 50)
+    @Column(name = "note")
     private String note;
 
     @ColumnDefault("now()")
